@@ -1,42 +1,41 @@
-# Administration: Bus and Route Setup
+# Adding Buses and Bus Lines
 
-[Documentation index](README.md)
+[Back to documentation](README.md)
 
-The original report documents separate user and admin menus, an **Add Bus** screen, an **Add Line** screen and a station-entry dialog (PDF pp. 123–125 and 164–176). The current implementation uses [MainActivity.java](../app/src/main/java/com/example/busproject/MainActivity.java), [AddBus.java](../app/src/main/java/com/example/busproject/AddBus.java) and [AddLine.java](../app/src/main/java/com/example/busproject/AddLine.java).
+**Report reference:** PDF pages 124–125 and 164–176.
 
-## Menu visibility
-
-`MainActivity` shows `addline`, `addbus` and `devtest` menu items when `User.getUserName()` equals `admin`. This is a **client-side UI convention only**; it does not constitute protected administrator authorization.
+The original app has additional menu options for the username `admin`. These screens allow the user to add buses and create bus lines.
 
 ## Adding a bus
 
-[AddBus.java](../app/src/main/java/com/example/busproject/AddBus.java) collects a bus identifier and a camera host/IP, checks the `Buses` node, and creates a `Bus` instance in Firebase.
+[Java: AddBus.java](../app/src/main/java/com/example/busproject/AddBus.java) · [XML: activity_add_bus.xml](../app/src/main/res/layout/activity_add_bus.xml)
 
-The `Bus` model initializes seat availability with 15 `false` flags, an available status, the stream host, and default fields for passenger count, temperature and control signals.
+The user enters a bus identifier and the IP address for the camera stream.
 
-## Creating a route
+The code checks Firebase and creates a new `Bus` object. The new bus is saved under the `Buses` section.
 
-[AddLine.java](../app/src/main/java/com/example/busproject/AddLine.java) collects:
+## Adding a bus line
 
-- Route number and description
-- Associated available bus
-- Ordered list of stations
-- Departure time and ride duration
-- Fare information
+[Java: AddLine.java](../app/src/main/java/com/example/busproject/AddLine.java) · [XML: activity_add_line.xml](../app/src/main/res/layout/activity_add_line.xml)
 
-A dialog allows the operator to add and remove stations. A time-picker dialog records the departure time. Saving a route writes a `Line` model to `Lines/{lineNumber}` and marks the associated bus as unavailable in the `Buses` node.
+The user enters:
 
-![Original add-route screen](../assets/screenshots/09-add-route.png)
+- Bus line number
+- Line description
+- Bus to use for the line
+- Bus stops
+- Departure time
+- Travel time
+- Ticket price
 
-## Removing a route
+A separate dialog allows stations to be added to or removed from the list.
 
-In [LineInfo.java](../app/src/main/java/com/example/busproject/LineInfo.java), the admin route removal path deletes the line record and marks its assigned bus as available again.
+After the line is saved, the app writes it into the `Lines` section of Firebase and marks the selected bus as unavailable for another line.
 
-## Engineering notes
+![Adding a line in the original project](../assets/screenshots/09-add-route.png)
 
-- No trusted server-side authorization flow is demonstrated by the admin UI.
-- Route creation and bus availability changes are separate database writes, which may become inconsistent on failure.
-- Validation is mainly implemented in the activity layer rather than in a centralized domain model.
-- Bus IDs, line IDs and command values follow original prototype conventions.
+## Removing a line
 
-This part of the capstone is valuable as a demonstration of Android forms, dialogs, Firebase writes, and dynamic navigation, but must be hardened before use with real users.
+[LineInfo.java](../app/src/main/java/com/example/busproject/LineInfo.java) also contains an option that removes a bus line from Firebase and marks the related bus as available again.
+
+**Simple explanation:** These screens were created to manage the bus lines used in the original project model.
