@@ -94,6 +94,24 @@ The Android source described in the project documentation includes the following
 
 These names are taken from the **original project report**. The checked-in Android Studio project is the source of truth for actual package paths and current build configuration.
 
+## Technical documentation
+
+The [technical documentation index](docs/README.md) expands the explanations in the original Hebrew capstone report into English guides **cross-checked against this repository's Java/XML source**. Follow the implementation from architecture to Android UI, database integration and the IoT prototype.
+
+| Walkthrough | Source-level focus |
+|---|---|
+| [Architecture](docs/architecture.md) | Android, Firebase, ESP32-CAM, ESP32 and FPGA |
+| [Navigation and Android UI](docs/android-navigation.md) | Activities, fragments, RecyclerView and XML |
+| [Login and sessions](docs/authentication.md) | Registration, remembered login and security limitations |
+| [Firebase data model](docs/firebase-data-model.md) | Bus, Line, Ticket, users, paths and listeners |
+| [Ticket booking](docs/ticket-booking.md) | Stations, 15-seat map and reservation writes |
+| [QR boarding](docs/qr-boarding.md) | Scan callback and boarding checks |
+| [Camera and OCR](docs/camera-ocr.md) | MJPEG capture, ML Kit and station events |
+| [Administrator workflows](docs/admin-workflows.md) | Creating buses/routes and station lists |
+| [Testing and limitations](docs/testing-and-limitations.md) | Reproducibility, security and engineering backlog |
+
+> **Attribution:** The original report was a joint capstone by **Alik Minenko and Nimrod Saban**. Documentation preserves the project's original technical explanations while omitting the full report, which contains personal details.
+
 ## Getting started
 
 ### Requirements
@@ -127,4 +145,4 @@ This is an **academic prototype**, and the original implementation requires a se
 
 This project was submitted in **April 2023** as a final capstone in the **Electrical & Electronics Engineering Technician program (Electronic Systems track) at Kinneret Technological College**, under the topic *Passenger Mapping and Alerts on a Bus Using IoT Technology*.
 
-It was developed by **Alik Minenko**, under the supervision of **Eyal Havarbar** (name transliterated from the Hebrew report). The original report documents the electronics, firmware, VHDL logic, Android screens, Java/XML source, integration, troubleshooting, and testing.
+It was developed by **Alik Minenko and Nimrod Saban**, under the supervision of **Eyal Havarbar** (name transliterated from the Hebrew report). The original report documents the electronics, firmware, VHDL logic, Android screens, Java/XML source, integration, troubleshooting, and testing.
