@@ -1,42 +1,31 @@
-# YourBUS — Technical Documentation
+# YourBUS — Android Code Explanations
 
-This documentation expands the [project overview](../README.md) into a walkthrough of the **Android implementation**. It is adapted from the original Hebrew capstone report (April 2023), then checked against the Java and XML files currently in this repository.
+This folder explains the **Android application I developed for my Smart Bus final project**.
 
-**How to read:** start with the architecture, follow the user journey, and then examine the Firebase, ticketing, QR, and camera integrations. Links lead to the real implementation.
+The explanations are written in simple English. They are based on **Chapter 6 (Java and XML)** of the original Hebrew project report and the Java/XML files in this repository. They describe what the code does; they do not describe new features or planned changes.
 
-| Topic | What it covers | Original report (PDF page) |
+**How to use these pages:** Read the short explanation, open the linked Java file, and compare it with the original report.
+
+| Explanation | Main Java files | Where it appears in the report |
 |---|---|---|
-| [System architecture](architecture.md) | Android, Firebase, ESP32, FPGA and communication flow | 6, 11–12, 44 |
-| [Android navigation](android-navigation.md) | Splash screen, activities, fragments and RecyclerView | 123–130, 141–153 |
-| [Authentication and session](authentication.md) | Registration, login, remembered session and security caveats | 131–139, 144–149 |
-| [Firebase data model](firebase-data-model.md) | Routes, buses, users and ticket objects | 151–163, 203–210 |
-| [Ticket and seat reservation](ticket-booking.md) | Route information, station and seat choice, reservation writes | 177–190 |
-| [QR boarding flow](qr-boarding.md) | Camera scanning and ticket/bus validation | 191–193, 157–163 |
-| [ESP32-CAM and OCR](camera-ocr.md) | MJPEG capture, ML Kit, stop recognition and prototype control | 194–202 |
-| [Admin workflows](admin-workflows.md) | Adding buses/routes, stop lists and admin UI | 123–125, 164–176 |
-| [Testing and limitations](testing-and-limitations.md) | Reproducing a demo and known improvements | Report overview and current code |
+| [Project and system connection](architecture.md) | Android app and Firebase | PDF pages 6, 11–12, 44 |
+| [App screens and navigation](android-navigation.md) | SplashActivity, MainActivity, LinesFragment, TicketsFragment | PDF pages 123–126, 127–130, 141–153 |
+| [Login and registration](authentication.md) | LoginActivity, User, SplashActivity | PDF pages 131–140, 205 |
+| [Firebase and app classes](firebase-data-model.md) | Bus, Line, Ticket, User | PDF pages 203–210 |
+| [Choosing stations and seats](ticket-booking.md) | LineInfo, TicketsFragment | PDF pages 154–163, 177–190 |
+| [Scanning a QR code](qr-boarding.md) | QrActivity, TicketsFragment | PDF pages 157–163, 191–193 |
+| [ESP32-CAM and text recognition](camera-ocr.md) | ServerActivity | PDF pages 194–202 |
+| [Adding buses and lines](admin-workflows.md) | AddBus, AddLine | PDF pages 123–125, 164–176 |
+| [Files and project setup](testing-and-limitations.md) | Android Studio project | Android source and report Chapter 6 |
 
-> **Documentary scope:** The report explains the original educational prototype. These pages describe the existing implementation, **not** a claim that the code is production-ready, secure, or currently passing a clean build. References to pages use the **PDF's page numbers**; the printed page numbers in the report can differ by one.
+> Page numbers above refer to **PDF pages**, not the printed numbers at the bottom of the report.
 
-## Repository map
+## The main Android source folder
 
-- [Android Java source](../app/src/main/java/com/example/busproject)
-- [Android XML layouts](../app/src/main/res/layout)
-- [Android manifest](../app/src/main/AndroidManifest.xml)
-- [Gradle configuration](../app/build.gradle)
-- [Prototype screenshots](../assets/screenshots)
-- [System diagram](../assets/architecture/system-block-diagram.png)
+[Open the Java classes](../app/src/main/java/com/example/busproject) · [Open the XML layouts](../app/src/main/res/layout)
 
-## Historical context and attribution
+## About the work
 
-The Android app in this repository was **independently developed by Alik Minenko** as part of a broader academic smart-bus capstone project. This repository is maintained as an Android-development portfolio example. The full original report is **not committed**, because it contains personal and academic records. Descriptions here are paraphrased and reorganized for readability, with links back to source files for verification.
+The **Android application** in this repository was independently developed by **Alik Minenko** as part of the wider Smart Bus academic project. The hardware is described only to explain how the app communicates with the project system.
 
-## Reading a code walkthrough
-
-Each page distinguishes:
-
-1. **Report description** — behavior explained in the original project report.
-2. **Current repository code** — observable Java classes, data fields and event handlers.
-3. **Limitations / next steps** — implementation concerns or possible improvements, which should not be mistaken for implemented features.
-
-This is not an API reference or a deployment guide; see [testing and limitations](testing-and-limitations.md) for reproducibility concerns.
+The original report is not uploaded here because it contains personal information.
