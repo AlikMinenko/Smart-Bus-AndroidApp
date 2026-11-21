@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+
+    <application
+        android:name=".User"
+        android:allowBackup="true"
+        android:icon="@mipmap/yourbus_icon"
+        android:label="YourBUS"
+        android:roundIcon="@mipmap/yourbus_icon_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.BusProject"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:label"
+        >
+
+        <meta-data
+            android:name="com.google.mlkit.vision.DEPENDENCIES"
+            android:value="ocr" />
+
+        <activity android:name=".AddBus" />
+        <activity android:name=".ServerActivity" />
+        <activity android:name=".DevTest" />
+        <activity android:name=".QrActivity" />
+        <activity android:name=".LineInfo" />
+        <activity android:name=".AddLine" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity" />
+        <activity android:name=".SplashActivity"
+            android:exported="true"
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

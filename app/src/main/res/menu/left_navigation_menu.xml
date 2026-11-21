@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/grp1">
+        <item
+            android:id="@+id/addbus"
+            android:icon="@drawable/bus_icon"
+            android:title="Add Bus" />
+        <item
+            android:id="@+id/addline"
+            android:icon="@drawable/map_marker_icon"
+            android:title="Add Line" />
+        <item
+            android:id="@+id/devtest"
+            android:icon="@drawable/dev_icon"
+            android:title="Dev Test" />
+
+        <item
+            android:id="@+id/passchange"
+            android:icon="@drawable/key_icon"
+            android:title="Change Password" />
+    </group>
+
+    <group android:id="@+id/grp2">
+        <item
+            android:id="@+id/exit"
+            android:icon="@drawable/exit_icon"
+            android:title="Sign out" />
+    </group>
+
+</menu>
