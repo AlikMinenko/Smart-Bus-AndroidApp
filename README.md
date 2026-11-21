@@ -94,23 +94,23 @@ The Android source described in the project documentation includes the following
 
 These names are taken from the **original project report**. The checked-in Android Studio project is the source of truth for actual package paths and current build configuration.
 
-## Technical documentation
+## Android code explanations from the project report
 
-The [technical documentation index](docs/README.md) expands the explanations in the original Hebrew capstone report into English guides **cross-checked against this repository's Java/XML source**. Follow the implementation from architecture to Android UI, database integration and the IoT prototype.
+The [documentation pages](docs/README.md) explain **only the Android code and project behavior described in the original Hebrew final-project report and visible in this repository**. They use simple English and link directly to the Java and XML files. They are short summaries, **not word-for-word translations** of the report.
 
-| Walkthrough | Source-level focus |
+| Topic | Explanation |
 |---|---|
-| [Architecture](docs/architecture.md) | Android, Firebase, ESP32-CAM, ESP32 and FPGA |
-| [Navigation and Android UI](docs/android-navigation.md) | Activities, fragments, RecyclerView and XML |
-| [Login and sessions](docs/authentication.md) | Registration, remembered login and security limitations |
-| [Firebase data model](docs/firebase-data-model.md) | Bus, Line, Ticket, users, paths and listeners |
-| [Ticket booking](docs/ticket-booking.md) | Stations, 15-seat map and reservation writes |
-| [QR boarding](docs/qr-boarding.md) | Scan callback and boarding checks |
-| [Camera and OCR](docs/camera-ocr.md) | MJPEG capture, ML Kit and station events |
-| [Administrator workflows](docs/admin-workflows.md) | Creating buses/routes and station lists |
-| [Testing and limitations](docs/testing-and-limitations.md) | Reproducibility, security and engineering backlog |
+| [How the system connects](docs/architecture.md) | Android, Firebase and the smart-bus model |
+| [App screens](docs/android-navigation.md) | Splash screen, main screen, lines and tickets |
+| [Login and registration](docs/authentication.md) | User login, registration and remember-me |
+| [Firebase and Java classes](docs/firebase-data-model.md) | Bus, Line, Ticket and User |
+| [Choosing stations and seats](docs/ticket-booking.md) | The ticket reservation flow |
+| [QR scanner](docs/qr-boarding.md) | Scanning a bus code and checking a ticket |
+| [ESP32-CAM and text recognition](docs/camera-ocr.md) | Video, recognized station text and bus model |
+| [Adding buses and lines](docs/admin-workflows.md) | Original administration screens |
+| [Project files](docs/testing-and-limitations.md) | Where the source files are and what they contain |
 
-> **Android development credit:** The Android application and its Java/XML implementation were developed independently by **Alik Minenko**. This repository adapts technical explanations from the wider academic project report without publishing the full report, which contains personal details.
+> **Android application credit:** The Android application and its Java/XML implementation were independently developed by **Alik Minenko**. The original report is not included here because it contains personal information.
 
 ## Getting started
 
