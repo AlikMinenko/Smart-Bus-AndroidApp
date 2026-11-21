@@ -1,45 +1,35 @@
-# QR Scanning and Boarding Validation
+# QR Code Scanning
 
-[Documentation index](README.md)
+[Back to documentation](README.md)
 
-The report describes a QR scan screen and a bus-boarding verification flow (PDF pp. 157–163 and 191–193). The implementation spans [QrActivity.java](../app/src/main/java/com/example/busproject/QrActivity.java) and [TicketsFragment.java](../app/src/main/java/com/example/busproject/TicketsFragment.java).
+**Report reference:** PDF pages 126, 157–163 and 191–193.
 
-## Scanning screen
+[Java: QrActivity.java](../app/src/main/java/com/example/busproject/QrActivity.java) · [XML: activity_qr.xml](../app/src/main/res/layout/activity_qr.xml)
 
-`QrActivity` creates a `CodeScanner` object, selects the back-facing camera, configures continuous scanning and supplies a decode callback. The application requests the Android `CAMERA` permission when needed, starts preview in `onResume`, and releases camera resources in `onPause`.
+The app has a QR scanning screen. The user opens it from the tickets screen to scan the QR code of a bus.
 
-On a successful decode, the activity places the **scanned text** in the returning `Intent` as `BusID` and finishes. The scanner itself **does not authenticate the passenger** and does not validate the bus; that logic runs in the ticket fragment.
+## How the scan works
 
-```mermaid
-flowchart TD
-  Tickets["TicketsFragment: tap QR"] --> Scan["QrActivity: camera preview"]
-  Scan --> Code["Decode QR text into BusID"]
-  Code --> Match["TicketsFragment: match bus to ticket"]
-  Match --> Conditions{"Bus, station and allowed checks pass?"}
-  Conditions -- "Yes" --> Command["Set bus functions=5; currentUser; ticket allowed=false"]
-  Conditions -- "No" --> Reject["Show unsuccessful scan animation"]
-```
+1. `QrActivity` opens the phone camera using the `CodeScanner` library.
+2. The scanner reads the QR code.
+3. The scanned text is returned to the tickets screen using an `Intent` value named `BusID`.
+4. [TicketsFragment.java](../app/src/main/java/com/example/busproject/TicketsFragment.java) checks the scanned bus against the user's tickets.
 
-## Validation performed by the current implementation
+## Checking the ticket
 
-After receiving the `BusID` result, `TicketsFragment` attempts to:
+The code checks information such as:
 
-- Find a ticket whose `bus` matches the scanned bus ID.
-- Read the current station `currentST` and the Boolean `goingdown` state.
-- Compare the ticket's pickup station with the bus's current station.
-- Check the ticket's `allowed` flag.
-- When those checks succeed, write a command value to `Buses/{busId}/functions`, record the current username in `currentUser`, and mark the ticket as no longer allowed.
+- Whether the user has a ticket for the scanned bus.
+- Whether the bus is at the pickup station.
+- Whether the ticket is marked as allowed.
+- Whether the bus is currently in the passenger drop-off process.
 
-The original project uses `functions = 5` as a command in the prototype's hardware-control flow. This is a design-specific numeric value, not a standardized transit protocol.
+If the checks succeed, the app updates values in Firebase that are used by the smart-bus model for boarding.
 
-![Original QR scanner screen](../assets/screenshots/07-qr-scanner.png)
+The tickets screen shows a visual result for a successful or unsuccessful scan.
 
-## Limitations found in the reviewed code
+![QR scanning screen from the original report](../assets/screenshots/07-qr-scanner.png)
 
-- **Possible out-of-range access:** `TicketsFragment` references `ticketlist.get(helper)` even when there is no matching ticket, so a failed bus match can select an invalid ticket or wrong data.
-- **Client-side validation:** Checking a QR string and writing control flags from a client is not sufficient proof of boarding authorization.
-- **Non-atomic updates:** Updating multiple Firebase locations separately can leave partial states after a network failure.
-- **Permissions and lifecycle:** Camera permission handling must be tested on modern Android versions, especially denial and retry behavior.
-- **Static test bus assumption:** An admin branch contains a hard-coded `1bus1` ID.
+**Simple explanation:** The QR code helps the app identify the bus. The ticket and current station are then checked using the information saved in Firebase.
 
-For a real deployment, a trusted backend should validate ticket ownership, trip/station, replay prevention and permission before issuing a hardware instruction.
+This document describes the original project behavior, not a new QR system.
