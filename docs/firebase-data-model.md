@@ -1,85 +1,61 @@
-# Firebase Realtime Database and Data Models
+# Firebase and the Java Data Classes
 
-[Documentation index](README.md)
+[Back to documentation](README.md)
 
-The project report describes Firebase as the link between the Android screens and the smart-bus hardware (report PDF pp. 44, 151–163 and 203–210). The Java source uses Realtime Database `DatabaseReference`, `DataSnapshot`, and `ValueEventListener` throughout the app.
+**Report reference:** PDF page 44 and pages 203–210.
 
-## Main database paths used by the code
+The Android app uses **Firebase Realtime Database** to store and read information. The Java code uses classes such as `DatabaseReference` and `ValueEventListener` to communicate with Firebase.
 
-The hierarchy below is **schematic**. It shows named fields visible in the Java source; it is not an exported production dataset or a complete guaranteed schema.
+## Main information saved in Firebase
 
-```text
-Realtime Database
-├── Users
-│   └── {username}
-│       ├── UserName
-│       ├── Email
-│       ├── Password               # Historical insecure plaintext field
-│       ├── Mode                   # Used by the historical admin flow
-│       └── Tickets
-│           └── {lineNumber}
-│               ├── bus
-│               ├── firststation
-│               ├── laststation
-│               ├── totalsits
-│               ├── linenum
-│               ├── sitpositions
-│               └── allowed
-├── Lines
-│   └── {lineNumber}
-│       ├── number
-│       ├── description
-│       ├── bus
-│       ├── stations
-│       ├── prices
-│       ├── deptime
-│       └── totaltime
-├── Buses
-│   └── {busId}
-│       ├── currentST
-│       ├── currentUser
-│       ├── totalpeople
-│       ├── functions
-│       ├── places                 # 15 Boolean seat flags
-│       ├── available
-│       ├── live                   # Camera stream host/IP
-│       ├── temp
-│       └── goingdown
-└── Project
-    └── SendToFPGA                 # Seen in DevTest.java
-```
+The app works mainly with:
 
-**Case matters** in Firebase keys. The `Bus`, `Line` and `Ticket` model properties are serialized from the Java models; some user fields are written manually using uppercase names. Do not assume every user node contains every field listed here.
+- `Users` — user information and tickets.
+- `Lines` — bus line information and station lists.
+- `Buses` — bus information, such as current station, seats and temperature.
 
-## Classes and their responsibilities
+These are the same database sections referenced in the Java explanations in the project report.
 
-| Model | Important properties | Used by |
-|---|---|---|
-| [Bus.java](../app/src/main/java/com/example/busproject/Bus.java) | `currentST`, `currentUser`, `totalpeople`, `functions`, `places`, `live`, `goingdown` | Admin screens, server monitoring, reservation and boarding |
-| [Line.java](../app/src/main/java/com/example/busproject/Line.java) | Route number, description, bus ID, stations, price, departure and ride duration | Route list and detail screens |
-| [Ticket.java](../app/src/main/java/com/example/busproject/Ticket.java) | Bus, pickup/drop-off station, seat count/positions, route, `allowed` | Ticket list and QR boarding |
-| [User.java](../app/src/main/java/com/example/busproject/User.java) | Static username, email and password fields | Global application user state |
+## Bus.java
 
-The original report includes separate explanations of these models and the `RecyclerView` adapters (PDF pp. 203–210).
+[Open Bus.java](../app/src/main/java/com/example/busproject/Bus.java)
 
-## A typical Firebase listener
+This class stores information about one bus, including:
 
-[LinesFragment.java](../app/src/main/java/com/example/busproject/LinesFragment.java) reads `Lines` as snapshots, transforms them into `Line` objects and updates the UI. [LineInfo.java](../app/src/main/java/com/example/busproject/LineInfo.java) watches `Buses/{busId}/places` to update available and occupied seat images.
+- Current station (`currentST`)
+- Current user (`currentUser`)
+- Number of people (`totalpeople`)
+- Bus temperature (`temp`)
+- Camera address (`live`)
+- Seat information (`places`)
 
-The same database is used for write operations. For example, confirming a ticket updates both a bus's seat flags and the current user's ticket record.
+The code starts the bus with **15 available seats**, represented by 15 `false` values in a list.
 
-## Why the schema is prototype-specific
+## Line.java
 
-- `places` is an array-like collection with **15** Boolean entries; the index corresponds to a seat.
-- Several flows reference the example bus ID `1bus1` directly rather than supporting arbitrary buses.
-- `functions` holds numeric control values consumed by the connected hardware prototype.
-- There is no checked-in database export or centrally versioned schema migration.
-- Multiple separate database writes do not guarantee an **atomic** seat reservation.
+[Open Line.java](../app/src/main/java/com/example/busproject/Line.java)
 
-## Security and robustness concerns
+This class holds information about a bus line: its number, description, related bus, station list, price, departure time and journey duration.
 
-The source contains an original Firebase database URL, but a database URL is not proof of public access. **Security Rules have not been audited from this repository.** The account code stores a raw password field, so the original database must not be exposed to real users.
+## Ticket.java
 
-A safer approach would use Firebase Authentication, UID-scoped paths, security rules, transaction-based seat allocation, explicit hardware command types, and null-safe parsing of database snapshots.
+[Open Ticket.java](../app/src/main/java/com/example/busproject/Ticket.java)
 
-Related: [Authentication](authentication.md) · [Ticket booking](ticket-booking.md) · [OCR and monitoring](camera-ocr.md).
+This class stores the ticket's bus, first station, last station, selected seats, number of seats and line number. It also stores a Boolean value named `allowed`, which is used in the QR boarding process.
+
+## User.java
+
+[Open User.java](../app/src/main/java/com/example/busproject/User.java)
+
+This class keeps the username, email and password values used by the original app.
+
+## What are getters and setters?
+
+The report explains the `get` and `set` methods in these classes:
+
+- A **getter** returns a stored value.
+- A **setter** changes a stored value.
+
+For example, `getCurrentST()` returns the current station saved in a `Bus` object, and `setCurrentST(...)` sets it.
+
+**Simple explanation:** The data classes help the app organize information received from Firebase, instead of working only with individual text values.
