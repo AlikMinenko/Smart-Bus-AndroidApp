@@ -3,7 +3,7 @@
 **A Java Android application connected to a physical smart-bus prototype through Firebase Realtime Database.**
 
 **Academic capstone project · April 2023 · Electrical & Electronics Engineering Technician program (Electronic Systems track)**  
-**Developed by Alik Minenko**
+**Originally developed by Alik Minenko and Nimrod Saban**
 
 > **Project status:** Educational prototype. This repository documents the original 2023 implementation; it is not a commercial transport, ticketing, or payment service. Some features require the original hardware and Firebase data structure.
 
