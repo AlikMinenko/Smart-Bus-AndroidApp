@@ -3,7 +3,7 @@
 **A Java Android application connected to a physical smart-bus prototype through Firebase Realtime Database.**
 
 **Academic capstone project · April 2023 · Electrical & Electronics Engineering Technician program (Electronic Systems track)**  
-**Developed by Alik Minenko**
+**Android application independently developed by Alik Minenko**
 
 > **Project status:** Educational prototype. This repository documents the original 2023 implementation; it is not a commercial transport, ticketing, or payment service. Some features require the original hardware and Firebase data structure.
 
@@ -94,6 +94,24 @@ The Android source described in the project documentation includes the following
 
 These names are taken from the **original project report**. The checked-in Android Studio project is the source of truth for actual package paths and current build configuration.
 
+## Android code explanations from the project report
+
+The [documentation pages](docs/README.md) explain **only the Android code and project behavior described in the original Hebrew final-project report and visible in this repository**. They use simple English and link directly to the Java and XML files. They are short summaries, **not word-for-word translations** of the report.
+
+| Topic | Explanation |
+|---|---|
+| [How the system connects](docs/architecture.md) | Android, Firebase and the smart-bus model |
+| [App screens](docs/android-navigation.md) | Splash screen, main screen, lines and tickets |
+| [Login and registration](docs/authentication.md) | User login, registration and remember-me |
+| [Firebase and Java classes](docs/firebase-data-model.md) | Bus, Line, Ticket and User |
+| [Choosing stations and seats](docs/ticket-booking.md) | The ticket reservation flow |
+| [QR scanner](docs/qr-boarding.md) | Scanning a bus code and checking a ticket |
+| [ESP32-CAM and text recognition](docs/camera-ocr.md) | Video, recognized station text and bus model |
+| [Adding buses and lines](docs/admin-workflows.md) | Original administration screens |
+| [Project files](docs/testing-and-limitations.md) | Where the source files are and what they contain |
+
+> **Android application credit:** The Android application and its Java/XML implementation were independently developed by **Alik Minenko**. The original report is not included here because it contains personal information.
+
 ## Getting started
 
 ### Requirements
@@ -127,4 +145,4 @@ This is an **academic prototype**, and the original implementation requires a se
 
 This project was submitted in **April 2023** as a final capstone in the **Electrical & Electronics Engineering Technician program (Electronic Systems track) at Kinneret Technological College**, under the topic *Passenger Mapping and Alerts on a Bus Using IoT Technology*.
 
-It was developed by **Alik Minenko**, under the supervision of **Eyal Havarbar** (name transliterated from the Hebrew report). The original report documents the electronics, firmware, VHDL logic, Android screens, Java/XML source, integration, troubleshooting, and testing.
+The Android application presented in this repository was independently developed by **Alik Minenko** as part of the broader academic capstone. The original report, supervised by **Eyal Havarbar** (name transliterated from the Hebrew report), documents electronics, firmware, VHDL logic, Android screens, Java/XML source, integration, troubleshooting, and testing.
