@@ -1,6 +1,6 @@
 # YourBUS — Technical Documentation
 
-This documentation expands the [project overview](../README.md) into a walkthrough of the **Android implementation**. It is adapted from the authors' original Hebrew capstone report (April 2023), then checked against the Java and XML files currently in this repository.
+This documentation expands the [project overview](../README.md) into a walkthrough of the **Android implementation**. It is adapted from the original Hebrew capstone report (April 2023), then checked against the Java and XML files currently in this repository.
 
 **How to read:** start with the architecture, follow the user journey, and then examine the Firebase, ticketing, QR, and camera integrations. Links lead to the real implementation.
 
@@ -29,13 +29,13 @@ This documentation expands the [project overview](../README.md) into a walkthrou
 
 ## Historical context and attribution
 
-YourBUS was developed as a shared capstone project by **Alik Minenko and Nimrod Saban**, as identified on the original project report. This repository is maintained as an Android-development portfolio example. The full original report is **not committed**, because it contains personal and academic records. Descriptions here are paraphrased and reorganized for readability, with links back to source files for verification.
+The Android app in this repository was **independently developed by Alik Minenko** as part of a broader academic smart-bus capstone project. This repository is maintained as an Android-development portfolio example. The full original report is **not committed**, because it contains personal and academic records. Descriptions here are paraphrased and reorganized for readability, with links back to source files for verification.
 
 ## Reading a code walkthrough
 
 Each page distinguishes:
 
-1. **Report description** — behavior explained by the original authors.
+1. **Report description** — behavior explained in the original project report.
 2. **Current repository code** — observable Java classes, data fields and event handlers.
 3. **Limitations / next steps** — implementation concerns or possible improvements, which should not be mistaken for implemented features.
 
