@@ -1,59 +1,40 @@
-# Android Navigation and UI Structure
+# Android Screens and Navigation
 
-[Documentation index](README.md)
+[Back to documentation](README.md)
 
-The original report documents the individual XML layouts and then explains how each Java activity or fragment connects to its views (report PDF pp. 123–130 and 141–153). The checked-in project uses **Java, XML layouts, Activities, Fragments, and RecyclerView** rather than a Jetpack Compose interface.
+**Report reference:** PDF pages 123–130, 141–153 and 154–163.
 
-## Entry screen: `SplashActivity`
+The application was built in **Java**. Its screens were designed with **XML** files. Each main screen has a Java class that controls buttons, text and navigation.
 
-Source: [SplashActivity.java](../app/src/main/java/com/example/busproject/SplashActivity.java) · [activity_splash.xml](../app/src/main/res/layout/activity_splash.xml)
+## 1. Splash screen
 
-The splash activity shows animated bus, location-pin and title elements. A `Handler` introduces an approximately four-second transition. The code reads the `LoggedIn` SharedPreferences file:
+[Java: SplashActivity.java](../app/src/main/java/com/example/busproject/SplashActivity.java) · [XML: activity_splash.xml](../app/src/main/res/layout/activity_splash.xml)
 
-- `loggedin` decides whether to open `MainActivity` or `LoginActivity`.
-- `username` and `email` populate the static `User` holder when present.
-- Animations are loaded from `res/anim`.
+This is the first screen shown when the application opens. It displays the project animation. After approximately four seconds, the app checks whether the user previously selected the option to remain logged in. It then opens the login screen or the main screen.
 
-This is a **local remembered-session check**, not evidence that a valid Firebase authentication session was revalidated.
+## 2. Main screen
 
-## Main screen and navigation
+[Java: MainActivity.java](../app/src/main/java/com/example/busproject/MainActivity.java) · [XML: activity_main.xml](../app/src/main/res/layout/activity_main.xml)
 
-Source: [MainActivity.java](../app/src/main/java/com/example/busproject/MainActivity.java) · [activity_main.xml](../app/src/main/res/layout/activity_main.xml)
+The main screen has two main tabs:
 
-The main activity inflates `ActivityMainBinding` (View Binding), initializes the route fragment, and provides two navigation mechanisms:
+- **Lines:** Shows the available bus lines.
+- **Tickets:** Shows the user's tickets.
 
-1. **Bottom navigation:** switches between `LinesFragment` and `TicketsFragment`, with slide animations.
-2. **Navigation drawer:** exposes route/bus administration options for the username `admin`, plus password change and logout.
+The screen also includes a side navigation menu with more options. The original app shows additional menu options for the `admin` username.
 
-The report explains the visual distinction between the regular-user and administrator navigation menus. The role distinction is implemented in the client by comparing usernames; see [authentication](authentication.md) for why that is insufficient as a security boundary.
+## 3. Lines screen
 
-## Route list
+[LinesFragment.java](../app/src/main/java/com/example/busproject/LinesFragment.java) reads line information from Firebase and displays the lines in a scrolling list. [LineAdapter.java](../app/src/main/java/com/example/busproject/LineAdapter.java) is the Java class that displays each item in this list.
 
-Source: [LinesFragment.java](../app/src/main/java/com/example/busproject/LinesFragment.java) · [LineAdapter.java](../app/src/main/java/com/example/busproject/LineAdapter.java)
+Selecting a line opens [LineInfo.java](../app/src/main/java/com/example/busproject/LineInfo.java), where the user can view the line information.
 
-- The fragment creates a `RecyclerView` and `LinearLayoutManager`.
-- A Firebase `ValueEventListener` populates an `ArrayList<Line>` from the `Lines` node.
-- `LineAdapter` binds each line to a row layout and forwards click events to the fragment.
-- Clicking a route opens [LineInfo.java](../app/src/main/java/com/example/busproject/LineInfo.java) with selected route fields and the station list passed using `Intent` extras.
+![Lines screen from the project report](../assets/screenshots/03-lines.png)
 
-## Ticket list
+## 4. Tickets screen
 
-Source: [TicketsFragment.java](../app/src/main/java/com/example/busproject/TicketsFragment.java) · [TicketAdapter.java](../app/src/main/java/com/example/busproject/TicketAdapter.java)
+[TicketsFragment.java](../app/src/main/java/com/example/busproject/TicketsFragment.java) reads the current user's tickets from Firebase. [TicketAdapter.java](../app/src/main/java/com/example/busproject/TicketAdapter.java) displays the tickets in a list.
 
-This fragment uses the same adapter pattern for a user's tickets, displays an empty state when needed, opens ticket-detail dialogs and starts the QR scanner. A bus-seat listener updates the seat diagram in the ticket details.
+The user can open the details of a ticket and start the QR scanner from this screen.
 
-## Layout-to-code connections
-
-| Feature | Java entry point | Layout |
-|---|---|---|
-| Splash | [SplashActivity](../app/src/main/java/com/example/busproject/SplashActivity.java) | [activity_splash.xml](../app/src/main/res/layout/activity_splash.xml) |
-| Login | [LoginActivity](../app/src/main/java/com/example/busproject/LoginActivity.java) | [activity_login.xml](../app/src/main/res/layout/activity_login.xml) |
-| Main navigation | [MainActivity](../app/src/main/java/com/example/busproject/MainActivity.java) | [activity_main.xml](../app/src/main/res/layout/activity_main.xml) |
-| Routes | [LinesFragment](../app/src/main/java/com/example/busproject/LinesFragment.java) | [fragment_lines.xml](../app/src/main/res/layout/fragment_lines.xml) |
-| Tickets | [TicketsFragment](../app/src/main/java/com/example/busproject/TicketsFragment.java) | [fragment_tickets.xml](../app/src/main/res/layout/fragment_tickets.xml) |
-
-![Original routes screen](../assets/screenshots/03-lines.png)
-
-## Engineering notes
-
-This structure makes the original project easy to explore because screen names correspond closely to Java classes and XML layouts. For a modernized implementation, state restoration, lifecycle-aware observers, and separating Firebase calls from UI code would help make behavior more predictable.
+**Simple explanation:** A `Fragment` is a part of a screen. An `Adapter` helps display the data in a list. These terms are also explained in the Java chapter of the report.
