@@ -1,57 +1,52 @@
-# ESP32-CAM Stream, OCR and Station-Aware Control
+# ESP32-CAM Video and Text Recognition
 
-[Documentation index](README.md)
+[Back to documentation](README.md)
 
-The original report's monitoring chapter explains how the model bus uses a camera feed and recognized station text to coordinate passenger-related events (PDF pp. 194–202). The actual code is in [ServerActivity.java](../app/src/main/java/com/example/busproject/ServerActivity.java).
+**Report reference:** PDF pages 126 and 194–202.
 
-**Important:** This is an Android activity acting as the prototype's *server/monitoring screen*. The existing repository does **not** implement a 24/7 standalone backend, an on-device OCR library running on the ESP32, or autonomous processing after the Android app is closed.
+[Java: ServerActivity.java](../app/src/main/java/com/example/busproject/ServerActivity.java) · [XML: activity_server.xml](../app/src/main/res/layout/activity_server.xml)
 
-## Stage 1 — Connect to the camera
+The project includes a screen called `ServerActivity`. In the original report, this screen represents the computer inside the bus.
 
-The monitoring activity listens to `Buses/1bus1/live` in Firebase to obtain the camera's host/IP. It then opens an MJPEG feed at an HTTP URL with port **81** and the path `/stream`, using the `ipcam-view` library.
+It shows live video from the **ESP32-CAM** and uses text recognition to identify station names.
 
-The stream is shown in a `MjpegView`. The camera address is provided through database state rather than fixed in the Java method, although the bus ID is hard-coded.
+## 1. Receiving the camera video
 
-## Stage 2 — Recognize text from captured frames
+The Java code reads the camera IP address from Firebase. It connects to the ESP32-CAM video stream and displays the video inside the app.
 
-The view's `OnFrameCapturedListener` receives decoded `Bitmap` frames. The source creates an ML Kit `TextRecognizer` using `TextRecognizerOptions.DEFAULT_OPTIONS` and constructs an `InputImage` for each captured frame.
+## 2. Reading text from the video
 
-A frame counter triggers recognition when the count reaches **60**, then resets. This is sampling by **frame count**, not by a guaranteed number of seconds.
+The code uses **Google ML Kit** to recognize text in a video frame.
 
-The successful recognition callback iterates over detected text blocks and lines. Each detected line is written to `Buses/1bus1/currentST`, and the current-station text view is updated.
+It follows this sequence:
 
-```mermaid
-flowchart TD
-  Camera["ESP32-CAM: MJPEG /stream"] --> Display["MjpegView: captured Bitmap"]
-  Display --> Sample{"Every 60th captured frame"}
-  Sample -- "Yes" --> OCR["ML Kit TextRecognition"]
-  OCR --> Lines["Recognized text lines"]
-  Lines --> RTDB["Firebase: Buses/1bus1/currentST"]
-  RTDB --> Logic["Station-aware prototype control listeners"]
-```
+1. Receive frames from the video.
+2. Count the received frames.
+3. Every **60 frames**, send one frame for text recognition.
+4. Read the recognized text.
+5. Write the detected text to Firebase as the bus's current station (`currentST`).
 
-![Original monitoring interface](../assets/screenshots/08-ocr-server.png)
+The current station is also displayed on the monitoring screen.
 
-## Stage 3 — Respond to bus and ticket state
+![Monitoring screen from the project report](../assets/screenshots/08-ocr-server.png)
 
-The activity contains several Firebase listeners. The original report discusses:
+## 3. Using station information
 
-- A `LinkedHashMap` associating stations with passenger names and expected drop-off counts.
-- Passenger boarding logic based on the current user, their ticket and current seat/passenger state.
-- Control values written to `functions` for simulated doors, LEDs and audible alerts.
-- Monitoring the `goingdown` flag and passenger count to coordinate drop-off behavior.
-- Clearing relevant tickets and seat occupancy after passengers are considered to have left the bus.
+The rest of `ServerActivity` uses information from Firebase to help control the bus model.
 
-These are **prototype control assumptions**, not general transit-safety rules. They rely on specific Firebase paths and the connected ESP32/FPGA model.
+The original report describes these actions:
 
-## Engineering limitations and improvements
+- Read the ticket of the passenger who is boarding.
+- Use passenger counts to help determine when to close the entrance door.
+- Keep information about passengers and the stations where they need to get off.
+- Signal before a passenger's destination station.
+- Open and close the exit door according to the number of people getting off.
+- Update the related information in Firebase.
 
-1. **OCR confidence and station matching:** The current implementation writes recognized lines directly to `currentST` without robust normalization or a confirmed match to a known stop.
-2. **Asynchronous errors:** Some recognition and database error callbacks have no recovery handling.
-3. **Processing lifetime:** An activity-based monitoring screen is not an independently durable background service.
-4. **Network security:** The video uses local HTTP and the Android manifest permits cleartext traffic.
-5. **Coupling:** UI display, stream management, OCR and device-state logic are combined in one large activity.
-6. **Hard-coded bus identity:** Several listeners target `1bus1`.
-7. **Resource management:** Stream and recognizer lifetimes should be checked carefully for repeated listener changes and activity shutdown.
+These actions are part of the original model and are explained in the `ServerActivity` section of the report.
 
-This document records what the 2023 prototype demonstrates: Android camera streaming, ML Kit text recognition and database-driven hardware integration. It does not claim the OCR is safety-critical, continuous, or production-ready.
+## Important detail
+
+**The ESP32-CAM sends video, but the Android app performs text recognition.**
+
+The original code runs this process in `ServerActivity`. It does not show a separate cloud service that continues reading video when the Android activity is closed.
